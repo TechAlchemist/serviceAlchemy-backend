@@ -4,15 +4,36 @@ const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-  name: String,
+  firstName: String,
+  lastName: String,
   email: {
     type: String,
     required: true,
     lowercase: true,
     unique: true
   },
-  password: String
-}, {
+  password: String,
+  ticketIds: {
+    strings: [String],
+  },
+  businessUnit: {
+    type: String,
+    lowercase: true,
+    required: true
+  },
+  profileImage: {
+    type: String
+    // base64: String,
+    // imageFormat: String
+  },
+  authLevel: {
+    type: String,
+    default: 'customer',
+    enum: ['customer', 'engineer', 'manager', 'admin']
+  }
+
+}, 
+{
   timestamps: true
 });
 
