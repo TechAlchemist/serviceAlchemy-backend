@@ -13,12 +13,9 @@ const userSchema = new Schema({
     unique: true
   },
   password: String,
-  ticketIds: {
-    strings: [String],
-  },
+  ticketIds: [String],
   businessUnit: {
     type: String,
-    lowercase: true,
     required: true
   },
   profileImage: {
