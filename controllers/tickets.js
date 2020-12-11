@@ -4,7 +4,6 @@ const Ticket = require('../models/ticket');
 async function newTicket(req, res) {
 
     const ticket = new Ticket(req.body);
-    console.log('ticketBody' + ticket);
     try {
         await ticket.save();
     } 
@@ -13,6 +12,15 @@ async function newTicket(req, res) {
     }
 }
 
+async function getMyTickets(req, res) {
+    // console.log(JSON.stringify(req.headers));
+    let userId = req.get("userid");
+    const myTickets = await Ticket.find({'ticketCreator': userId})
+    .sort({ createdAt: 1 })
+  res.json(myTickets);
+}
+
 module.exports = {
-    newTicket
+    newTicket,
+    getMyTickets
 }
