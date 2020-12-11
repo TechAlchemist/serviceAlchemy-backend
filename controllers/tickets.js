@@ -39,9 +39,28 @@ async function deleteTicket(req, res) {
     })
 }
 
+async function updateTicket(req, res) {
+    
+    let ticketId = req.get('ticketid');
+    
+    Ticket.findById(ticketId, function (error, ticket) {
+        ticket.ticketTitle = req.body.ticketTitle;
+        ticket.ticketDescription = req.body.ticketDescription;
+        try {
+            console.log(ticket);
+            ticket.save();
+        } 
+        catch(error) {
+            res.status(400).json(error);
+        }
+    })
+
+}
+
 module.exports = {
     newTicket,
     getMyTickets,
     getSpecificTicket,
-    deleteTicket
+    deleteTicket,
+    updateTicket
 }
