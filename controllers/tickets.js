@@ -1,3 +1,4 @@
+const ticket = require('../models/ticket');
 const Ticket = require('../models/ticket');
 
 // create a new ticket
@@ -13,14 +14,34 @@ async function newTicket(req, res) {
 }
 
 async function getMyTickets(req, res) {
-    // console.log(JSON.stringify(req.headers));
     let userId = req.get("userid");
     const myTickets = await Ticket.find({'ticketCreator': userId})
     .sort({ createdAt: 1 })
   res.json(myTickets);
 }
 
+async function getSpecificTicket(req, res) {
+    let ticketId = req.get("ticketid");
+    const myTickets = await Ticket.find({'_id': ticketId})
+    res.json(myTickets);
+}
+
+async function deleteTicket(req, res) {
+    // console.log(JSON.stringify(req.headers));
+
+    let ticketId = req.get('ticketid');
+   Ticket.findById(ticketId, function(err, ticket) {
+        ticket.remove();
+        ticket.save( function(error) {
+            console.log('Ticket was deleted. ');
+            res.status(200).json({'status' : 'successful'})
+        })
+    })
+}
+
 module.exports = {
     newTicket,
-    getMyTickets
+    getMyTickets,
+    getSpecificTicket,
+    deleteTicket
 }
