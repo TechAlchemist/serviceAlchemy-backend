@@ -1,5 +1,5 @@
-const ticket = require('../models/ticket');
 const Ticket = require('../models/ticket');
+const User = require('../models/user');
 
 // create a new ticket
 async function newTicket(req, res) {
@@ -57,9 +57,29 @@ async function updateTicket(req, res) {
 
 }
 
+async function claimTicket(req, res) {
+    
+    console.log('payload recived! ');
+    let ticketId = req.headers.ticketid;
+    let engineerId = req.headers.engineerid;
+
+    Ticket.findById(ticketId, function (error, ticket) {
+        console.log(JSON.stringify(ticket));
+        ticket.workStarted = true;
+        ticket.owningEngineer = engineerId;
+        console.log(ticket.workStarted);
+        try {
+            ticket.save();
+        } 
+        catch(error) {
+            res.status(400).json(error);
+        }
+    })
+}
+
 async function getOpenTickets(req, res) {
 
-    const myTickets = await Ticket.find({'closed': false})
+    const myTickets = await Ticket.find({'workStarted': false})
     res.json(myTickets);
 }
 
@@ -69,5 +89,6 @@ module.exports = {
     getSpecificTicket,
     deleteTicket,
     updateTicket,
-    getOpenTickets
+    getOpenTickets,
+    claimTicket
 }
