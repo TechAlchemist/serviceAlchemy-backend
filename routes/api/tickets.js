@@ -3,6 +3,7 @@ const router = express.Router();
 const ticketsCtrl = require('../../controllers/tickets');
 
 
+router.get('/openTickets', ticketsCtrl.getOpenTickets);
 router.get('/myTickets', ticketsCtrl.getMyTickets);
 router.get('/singleTicket', ticketsCtrl.getSpecificTicket);
 router.delete('/deleteTicket', ticketsCtrl.deleteTicket);

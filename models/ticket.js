@@ -5,27 +5,31 @@ const Schema = mongoose.Schema;
 const ticketSchema = new Schema({
     ticketCreator: {
         type: String,
-        required: true
+    },
+    ticketCreatorName: {
+        type: String,
+    },
+    ticketCreatorBusinessUnit: {
+        type: String,
+    },
+    ticketCreatorContact: {
+        type: String,
     },
     ownedBy: String,
     ticketTitle: {
         type: String,
-        required: true
     },
     ticketDescription: {
         type: String,
-        required: true
     },
     ticketType: {
         type: String,
-        required: true,
-        lowercase: true,
-        enum: ['incident', 'service request']
+        enum: ['Incident', 'Service Request']
     },
     ticketPriority: {
         type: Number,
         min: 1,
-        max: 5,
+        max: 4,
     },
     satisfaction: {
         type: Number,
@@ -36,22 +40,27 @@ const ticketSchema = new Schema({
         type: String,
         default: 'No Feedback. '
     },
-    satisfactionSubmitted: Boolean,
+    satisfactionSubmitted: {
+        type: Boolean,
+        default: false
+    },
     closed: {
         type: Boolean,
         default: false
     },
-    closedDate: {
-        type: Date 
-    },
     closeDescription: {
-        type: String
+        type: String,
+        default: 'No Description yet. '
     },
     workStarted: {
         type: Boolean,
         default: false
     },
-    ownerHistory: [String]
+    owningEngineer: {
+        type: String,
+        default: 'None'
+    }
+
 },
 {
     timestamps: true

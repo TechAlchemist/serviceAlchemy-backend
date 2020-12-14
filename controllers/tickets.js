@@ -5,6 +5,7 @@ const Ticket = require('../models/ticket');
 async function newTicket(req, res) {
 
     const ticket = new Ticket(req.body);
+    console.log(ticket);
     try {
         await ticket.save();
     } 
@@ -47,7 +48,6 @@ async function updateTicket(req, res) {
         ticket.ticketTitle = req.body.ticketTitle;
         ticket.ticketDescription = req.body.ticketDescription;
         try {
-            console.log(ticket);
             ticket.save();
         } 
         catch(error) {
@@ -57,10 +57,17 @@ async function updateTicket(req, res) {
 
 }
 
+async function getOpenTickets(req, res) {
+
+    const myTickets = await Ticket.find({'closed': false})
+    res.json(myTickets);
+}
+
 module.exports = {
     newTicket,
     getMyTickets,
     getSpecificTicket,
     deleteTicket,
-    updateTicket
+    updateTicket,
+    getOpenTickets
 }
