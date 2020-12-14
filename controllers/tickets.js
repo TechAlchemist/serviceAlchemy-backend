@@ -59,7 +59,6 @@ async function updateTicket(req, res) {
 
 async function claimTicket(req, res) {
     
-    console.log('payload recived! ');
     let ticketId = req.headers.ticketid;
     let engineerId = req.headers.engineerid;
 
@@ -78,9 +77,38 @@ async function claimTicket(req, res) {
 }
 
 async function getOpenTickets(req, res) {
-
     const myTickets = await Ticket.find({'workStarted': false})
     res.json(myTickets);
+}
+
+async function getEngineerOpenTickets(req, res) {
+    let engineerId = req.headers.engineerid;
+    const myTickets = await Ticket.find({'owningEngineer': engineerId, 'closed': false})
+    res.json(myTickets);
+}
+
+async function getEngineerClosedTickets(req, res) {
+    let engineerId = req.headers.engineerid;
+    const myTickets = await Ticket.find({'owningEngineer': engineerId, 'closed': true})
+    res.json(myTickets);
+}
+
+async function closeTicket(req, res) {
+    let ticketId = req.body.ticketId;
+    let closeDescription = req.body.closeDescription;
+
+    Ticket.findById(ticketId, function (error, ticket) {
+        
+        ticket.closeDescription = closeDescription;
+        ticket.closed = true;
+
+        try {
+            ticket.save();
+        } 
+        catch(error) {
+            res.status(400).json(error);
+        }
+    })
 }
 
 module.exports = {
@@ -90,5 +118,8 @@ module.exports = {
     deleteTicket,
     updateTicket,
     getOpenTickets,
-    claimTicket
+    claimTicket,
+    getEngineerOpenTickets,
+    closeTicket,
+    getEngineerClosedTickets
 }
