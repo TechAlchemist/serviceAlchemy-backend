@@ -16,9 +16,14 @@ async function newTicket(req, res) {
 
 async function getMyTickets(req, res) {
     let userId = req.get("userid");
-    const myTickets = await Ticket.find({'ticketCreator': userId})
-    .sort({ createdAt: 1 })
-  res.json(myTickets);
+    const myTickets = await Ticket.find({'ticketCreator': userId, 'closed' : false})
+    res.json(myTickets);
+}
+
+async function getMyClosedTickets(req, res) {
+    let userId = req.get("userid");
+    const myClosedTickets = await Ticket.find({'ticketCreator': userId, 'closed' : true})
+  res.json(myClosedTickets);
 }
 
 async function getSpecificTicket(req, res) {
@@ -29,7 +34,6 @@ async function getSpecificTicket(req, res) {
 
 async function deleteTicket(req, res) {
     // console.log(JSON.stringify(req.headers));
-
     let ticketId = req.get('ticketid');
    Ticket.findById(ticketId, function(err, ticket) {
         ticket.remove();
@@ -54,7 +58,6 @@ async function updateTicket(req, res) {
             res.status(400).json(error);
         }
     })
-
 }
 
 async function claimTicket(req, res) {
@@ -63,7 +66,6 @@ async function claimTicket(req, res) {
     let engineerId = req.headers.engineerid;
 
     Ticket.findById(ticketId, function (error, ticket) {
-        console.log(JSON.stringify(ticket));
         ticket.workStarted = true;
         ticket.owningEngineer = engineerId;
         console.log(ticket.workStarted);
@@ -77,8 +79,13 @@ async function claimTicket(req, res) {
 }
 
 async function getOpenTickets(req, res) {
-    const myTickets = await Ticket.find({'workStarted': false})
+    const myTickets = await Ticket.find({'workStarted': false});
     res.json(myTickets);
+}
+
+async function getClosedTickets(req, res) {
+    const myTicket = await Ticket.find({'closed' : true})
+    res.json(myTickets)
 }
 
 async function getEngineerOpenTickets(req, res) {
@@ -111,9 +118,29 @@ async function closeTicket(req, res) {
     })
 }
 
+async function submitSatisfactionSurvey(req, res) {
+    
+    let ticketId = req.body.ticketId;
+
+    Ticket.findById(ticketId, function (error, ticket) {
+        
+        ticket.satisfactionSurvey = req.body.satisfactionSurvey;
+        ticket.satisfaction = req.body.satisfaction;
+        ticket.satisfactionSubmitted = true;
+
+        try {
+            ticket.save();
+        } 
+        catch(error) {
+            res.status(400).json(error);
+        }
+    })
+}
+
 module.exports = {
     newTicket,
     getMyTickets,
+    getMyClosedTickets,
     getSpecificTicket,
     deleteTicket,
     updateTicket,
@@ -121,5 +148,6 @@ module.exports = {
     claimTicket,
     getEngineerOpenTickets,
     closeTicket,
-    getEngineerClosedTickets
+    getEngineerClosedTickets,
+    submitSatisfactionSurvey
 }
