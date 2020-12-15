@@ -3,7 +3,7 @@ const router = express.Router();
 const ticketsCtrl = require('../../controllers/tickets');
 const ticket = require('../../models/ticket');
 
-
+router.get('/survey', ticketsCtrl.getSurveyResults);
 router.get('/openTickets', ticketsCtrl.getOpenTickets);
 router.get('/closedTickets', ticketsCtrl.getMyClosedTickets);
 router.get('/myTickets', ticketsCtrl.getMyTickets);

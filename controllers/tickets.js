@@ -119,9 +119,7 @@ async function closeTicket(req, res) {
 }
 
 async function submitSatisfactionSurvey(req, res) {
-    
     let ticketId = req.body.ticketId;
-
     Ticket.findById(ticketId, function (error, ticket) {
         
         ticket.satisfactionSurvey = req.body.satisfactionSurvey;
@@ -137,6 +135,12 @@ async function submitSatisfactionSurvey(req, res) {
     })
 }
 
+async function getSurveyResults(req, res) {
+    let engineerId = req.headers.engineerid;
+    const myTickets = await Ticket.find({'owningEngineer': engineerId, 'satisfactionSubmitted' : true})
+    res.json(myTickets);
+}
+
 module.exports = {
     newTicket,
     getMyTickets,
@@ -149,5 +153,6 @@ module.exports = {
     getEngineerOpenTickets,
     closeTicket,
     getEngineerClosedTickets,
-    submitSatisfactionSurvey
+    submitSatisfactionSurvey,
+    getSurveyResults
 }
