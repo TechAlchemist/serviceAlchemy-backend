@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ticketsCtrl = require('../../controllers/tickets');
-const ticket = require('../../models/ticket');
+
 
 router.get('/survey', ticketsCtrl.getSurveyResults);
 router.get('/openTickets', ticketsCtrl.getOpenTickets);
